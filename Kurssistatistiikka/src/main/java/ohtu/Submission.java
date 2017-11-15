@@ -32,11 +32,19 @@ public class Submission {
         this.exercises = exercises;
     }
 
-        @Override
+    public String printExercises() {
+        String all = "";
+        for (Integer exercise : exercises) {
+            all += exercise + " ";
+        }
+        return all;
+    }
+
+    @Override
     public String toString() {
         return "viikko " + week + ": \n  "
                 + "tehtyjä tehtäviä yhteensä: " + this.getExercises().size() + ", "
-                + "aikaa kului yhteensä: " + this.getHours() + " tuntia, " 
-                + "tehdyt tehtävät: " + this.getExercises();
+                + "aikaa kului yhteensä: " + this.getHours() + " tuntia, "
+                + "tehdyt tehtävät: " + printExercises();
     }
 }
