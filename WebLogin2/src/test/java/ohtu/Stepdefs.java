@@ -22,6 +22,13 @@ public class Stepdefs {
         element.click();
     }
 
+    @Given("^command new user is selected$")
+    public void command_new_user_is_selected() throws Throwable {
+        driver.get(baseUrl);
+        WebElement element = driver.findElement(By.linkText("register new user"));
+        element.click();
+    }
+
     @When("^correct username \"([^\"]*)\" and password \"([^\"]*)\" are given$")
     public void username_correct_and_password_are_given(String username, String password) throws Throwable {
         logInWith(username, password);
@@ -37,6 +44,36 @@ public class Stepdefs {
         logInWith(username, password);
     }
 
+    @When("^a valid username \"([^\"]*)\" and password \"([^\"]*)\" and matching password confirmation are entered$")
+    public void a_valid_username_and_password_and_matching_password_confirmation_are_entered(String username,
+            String password) throws Throwable {
+        signInWith(username, password, password);
+    }
+
+    @When("^an invalid username \"([^\"]*)\" and valid password \"([^\"]*)\" and matching password confirmation are entered$")
+    public void an_invalid_username_and_valid_password_and_matching_password_confirmation_are_entered(String username,
+            String password) throws Throwable {
+        signInWith(username, password, password);
+    }
+
+    @When("^a valid username \"([^\"]*)\" and invalid password \"([^\"]*)\" and matching password confirmation are entered$")
+    public void a_valid_username_and_invalid_password_and_matching_password_confirmation_are_entered(String username,
+            String password) throws Throwable {
+        signInWith(username, password, password);
+    }
+
+    @When("^an invalid username \"([^\"]*)\" and password \"([^\"]*)\" and matching password confirmation are entered$")
+    public void an_invalid_username_and_password_and_matching_password_confirmation_are_entered(String username,
+            String password) throws Throwable {
+        signInWith(username, password, password);
+    }
+
+    @When("^a valid username \"([^\"]*)\" and password \"([^\"]*)\" and password confirmation \"([^\"]*)\" are entered$")
+    public void a_valid_username_and_password_and_password_confirmation_are_entered(String username,
+            String password, String passwordConfirmation) throws Throwable {
+        signInWith(username, password, passwordConfirmation);
+    }
+
     @Then("^user is logged in$")
     public void user_is_logged_in() throws Throwable {
         pageHasContent("Ohtu Application main page");
@@ -46,6 +83,35 @@ public class Stepdefs {
     public void user_is_not_logged_in_and_error_message_is_given() throws Throwable {
         pageHasContent("invalid username or password");
         pageHasContent("Give your credentials to login");
+    }
+
+    @Then("^a new user is created$")
+    public void a_new_user_is_created() throws Throwable {
+        pageHasContent("Welcome to Ohtu Application!");
+    }
+
+    @Then("^user is not created and short username error \"([^\"]*)\" is reported$")
+    public void user_is_not_created_and_short_username_error_is_reported(String arg1) throws Throwable {
+        pageHasContent("Create username and give password");
+        pageHasContent("username should have at least 3 characters");
+    }
+
+    @Then("^user is not created and short password error \"([^\"]*)\" is reported$")
+    public void user_is_not_created_and_short_password_error_is_reported(String arg1) throws Throwable {
+        pageHasContent("Create username and give password");
+        pageHasContent("password should have at least 8 characters");
+    }
+
+    @Then("^user is not created and taken username error \"([^\"]*)\" is reported$")
+    public void user_is_not_created_and_taken_username_error_is_reported(String arg1) throws Throwable {
+        pageHasContent("Create username and give password");
+        pageHasContent("username is already taken");
+    }
+
+    @Then("^user is not created and match error \"([^\"]*)\" is reported$")
+    public void user_is_not_created_and_match_error_is_reported(String arg1) throws Throwable {
+        pageHasContent("Create username and give password");
+        pageHasContent("password and password confirmation do not match");
     }
 
     @After
@@ -65,6 +131,18 @@ public class Stepdefs {
         element = driver.findElement(By.name("password"));
         element.sendKeys(password);
         element = driver.findElement(By.name("login"));
+        element.submit();
+    }
+
+    private void signInWith(String username, String password, String passwordConfirmation) {
+        assertTrue(driver.getPageSource().contains("Create username and give password"));
+        WebElement element = driver.findElement(By.name("username"));
+        element.sendKeys(username);
+        element = driver.findElement(By.name("password"));
+        element.sendKeys(password);
+        element = driver.findElement(By.name("passwordConfirmation"));
+        element.sendKeys(passwordConfirmation);
+        element = driver.findElement(By.name("signup"));
         element.submit();
     }
 }
